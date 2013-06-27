@@ -90,6 +90,19 @@ def format_studley(dictation):
     words = [word.capitalize() for word in text.split(" ")]
     return "".join(words)
 
+# Format: someWords
+def format_camel(dictation):
+    """ camel <dictation> """
+    text = str(dictation)
+    
+    def camelcase(): 
+        yield str.lower
+        while True:
+            yield str.capitalize
+    
+    c = camelcase()
+    return "".join(c.next()(x) for x in text.split())
+
 # Format: somewords
 def format_one_word(dictation):
     """ [all] one word <dictation> """
