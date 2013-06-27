@@ -152,6 +152,10 @@ def executeLetterSequence(letter_sequence):
 	for letter in letter_sequence:
 		letter.execute()
 
+def findOnce(letter, n):
+	Key('f').execute()
+	letter.execute()
+
 def find(letter, n):
 	f = Key('f')
 	for i in range(n):
@@ -162,6 +166,11 @@ def find(letter, n):
 example_rule = MappingRule(
     name='example',
     mapping={
+
+#
+		 #TODO: Implement a 'cancel' keyword that can be said at the end of any command
+		 #      and the entire command will be discarded.
+
 		 'again | repeat | marra thani': esc + Key('dot'),
 		 'append': esc + Key('a'),
 		 'insert': esc + Key('i'),
@@ -175,13 +184,13 @@ example_rule = MappingRule(
 		 '[go to [the]] first line': esc + Key('1') + Key('G'),
 		 '[go to [the]] last line': esc + Key('G'),
 		 
-		 'find <letter> [<n> times]': esc + Function(find),
-		 'find <letter> twice': esc + Function(find) + Function(find),
+		 'find <letter> [<n> times]': esc + Text('%(n)df') + Function(executeLetter),
+		 'find <letter> twice': esc + Text('2f') + Function(executeLetter),
 
 		 'drop letter': esc + Key('x'),
 		 'drop left [letter]': esc + Key('X'),
 		 'drop word': esc + Key('d, w'),
-		 'drop find <letter> [<n> times]': esc + Key('d') + Function(find),
+		 'drop find <letter> [<n> times]': esc + Key('d%(n)df') + Function(executeLetter),
 		 'drop to home': esc + Key('d, caret'),
 		 'drop to end': esc + Key('d, dollar'),
 
@@ -203,9 +212,10 @@ example_rule = MappingRule(
 		 'open line above': esc + Key('O'),
 
 		 'yank line': esc + Key('Y'),
+		 'yank <n> lines': esc + Text('y%(n)dy'),
 		 'yank word': esc + Key('y, w'),
-		 'yank find <letter> [<n> times]': esc + Key('y') + Function(find),
-		 'yank find <letter> twice': esc + Key('y') + Function(find) + Function(find),
+		 'yank find <letter> [<n> times]': Text('y%(n)df') + Function(executeLetter),
+		 'yank find <letter> twice': esc + Text('y2f') + Function(executeLetter),
 		 'put [(text | lines)] [after]': esc + Key('p'),
 		 'put [(text | lines)] before': esc + Key('P'),
 
@@ -214,8 +224,8 @@ example_rule = MappingRule(
 		 'undo | back | oops': esc + Key('u'),
 		 'redo': esc + Key('c-r'),
 
-		 'indent [<n> times]': esc + Key('rangle%(n)d, rangle%(n)d'),
-		 'outdent [<n> times]': esc + Key('langle:%(n)d, langle:%(nd)d'),
+		 'indent [<n> times]': esc + Key('rangle:%(n)d, rangle:%(n)d'),
+		 'outdent [<n> times]': esc + Key('langle:%(n)d, langle:%(n)d'),
 		 'indent block': esc + Key('rangle, i, rbrace'),
 		 'outdent block': esc + Key('langle, i, rbrace'),
 		},
